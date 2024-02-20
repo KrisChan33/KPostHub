@@ -31,7 +31,6 @@ class PostResource extends Resource
     protected static ?string $model = Post::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-pencil-square';
-
     public static function form(Form $form): Form
     {
         return $form
@@ -43,35 +42,35 @@ class PostResource extends Resource
                     Select::make('category_id')->required()->label('Category')->options(Category::all()->pluck('name', 'id')),  
                     ColorPicker::make('color')->required()->rgba(), 
                     MarkdownEditor::make('content')->columnspan('full')->required(),
-                    
                     ])->columnSpan(3)->columns(2),
-                
                 Group::make()->schema([
                     Section::make('image')->description('Post Details')
                     ->collapsible()
                     ->schema([
-                    FileUpload::make('thumbnail')->disk('public')->directory('thumbnails')->required(),
+                    FileUpload::make('thumbnail')->disk('/images')->directory('thumbnail')->required(),
                     ]),
                     Section::make('meta')->schema([
                         TagsInput::make('tags')->required(),
                         Checkbox::make('published'),
                     ]),
-                ])->columnSpan(1),
-                
+                ])->columnSpan([
+                    'default'=>1,
+                    'md'=>4,
+                    'lg'=>3,
+                    'xl'=>1]),
                 ])->columns([//using array to setup the columns responsive
                     'default'=>1,
                     'md'=>2,
                     'lg'=>3,
-                    'xl'=>4,
-                ]);
-
-                
+                    'xl'=>4]);
     }   
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                ImageColumn::make('thumbnail')->circular(),
+                ImageColumn::make('thumbnail')
+                ->sortable()
+                ->searchable(),
                 ColorColumn::make('color'),
                 TextColumn::make('title'),
                 TextColumn::make('slug'),
@@ -91,7 +90,6 @@ class PostResource extends Resource
                 ]),
             ]);
     }
-
     public static function getRelations(): array
     {
         return [

@@ -25,6 +25,7 @@ class Post extends Model
 
     protected $casts = [
         'tags' => 'array',
+        'published' => 'boolean',
     ];
 
     public function category()

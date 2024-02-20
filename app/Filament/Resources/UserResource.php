@@ -21,31 +21,33 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
     protected static ?string $navigationIcon = 'heroicon-o-user';
-
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Section::make('Create a User Here')->description('Create a User')
+                Section::make('Create a User Here')->description('')
                 ->schema([
-                    TextInput::make('name')->required(),
-                    TextInput::make('email')->email()->required(),
+                    TextInput::make('name')->required()->rules('max:50')->required(),
+                    TextInput::make('email')->email()->required()->suffix('@gmail.com'),
                     Select::make('role')->required()->options([
                         'Admin' => 'Admin',
-                        'User' => 'User',]),
-                    TextInput::make('password')->password()->required(),
+                        'Member' => 'Member',]),
+                    TextInput::make('password')->autocomplete(true)->password()->required(),
+                ])->columnspanfull()->columns([
+                    'default' => 2,
+                    'md' => 2,  
+                    'lg' => 2,
                 ]),
-            ])->columns(2);
+                    ]);
     }
-
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                TextColumn::make('name'),
-                TextColumn::make('email'),
-                TextColumn::make('password'),
-                TextColumn::make('role'),
+                TextColumn::make('name')->searchable()->sortable(),
+                TextColumn::make('email')->searchable()->sortable(),
+                TextColumn::make('password')->searchable()->sortable(),
+                TextColumn::make('role')->sortable()->searchable(),
                 TextColumn::make('created_at'),
                 TextColumn::make('updated_at'),
             ])
