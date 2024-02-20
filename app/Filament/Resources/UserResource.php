@@ -16,15 +16,16 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-
+use Filament\Forms\Components\Section;
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
     protected static ?string $navigationIcon = 'heroicon-o-user';
-    
+
     public static function form(Form $form): Form
     {
         return $form
+        section::make('Create a User Here')->descriotion('Create a User')
             ->schema([
                 TextInput::make('name')->required(),
                 TextInput::make('email')->email()->required(),
@@ -33,8 +34,9 @@ class UserResource extends Resource
                     'User' => 'User',
                 ]),
                 TextInput::make('password')->password()->required(),
-            ]);
+            ])->columns(2);
     }
+
     public static function table(Table $table): Table
     {
         return $table
