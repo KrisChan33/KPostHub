@@ -25,15 +25,16 @@ class UserResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-        section::make('Create a User Here')->descriotion('Create a User')
             ->schema([
-                TextInput::make('name')->required(),
-                TextInput::make('email')->email()->required(),
-                Select::make('role')->required()->options([
-                    'Admin' => 'Admin',
-                    'User' => 'User',
+                Section::make('Create a User Here')->description('Create a User')
+                ->schema([
+                    TextInput::make('name')->required(),
+                    TextInput::make('email')->email()->required(),
+                    Select::make('role')->required()->options([
+                        'Admin' => 'Admin',
+                        'User' => 'User',]),
+                    TextInput::make('password')->password()->required(),
                 ]),
-                TextInput::make('password')->password()->required(),
             ])->columns(2);
     }
 
