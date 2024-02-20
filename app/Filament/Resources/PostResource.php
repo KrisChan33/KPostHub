@@ -25,7 +25,8 @@ use Filament\Tables\Columns\ColorColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\CheckboxColumn;
 use Filament\Forms\Components\Section;
- 
+use Illuminate\Validation\Rule;
+
 class PostResource extends Resource
 {
     protected static ?string $model = Post::class;
@@ -37,11 +38,11 @@ class PostResource extends Resource
             ->schema([
                 Section::make('Create a Post')->description('Create a Post Here')
                 ->schema([
-                    TextInput::make('title')->required(),
-                    TextInput::make('slug')->required(),
+                    TextInput::make('title')->unique(ignoreRecord:true)->required()->rules('min:8| max:50'),
+                    TextInput::make('slug')->required()->rules('min:8| max:50'),
                     Select::make('category_id')->required()->label('Category')->options(Category::all()->pluck('name', 'id')),  
                     ColorPicker::make('color')->required()->rgba(), 
-                    MarkdownEditor::make('content')->columnspan('full')->required(),
+                    MarkdownEditor::make('content')->columnspan('full')->required()->rules('min:8| max:50'),
                     ])->columnSpan(3)->columns(2),
                 Group::make()->schema([
                     Section::make('image')->description('Post Details')
@@ -80,7 +81,6 @@ class PostResource extends Resource
                 ->date('M D Y  H:i:s')
                 ->sortable()
                 ->searchable(),
-
                 // TextColumn::make('updated_at')
                 // ->label('Updated on')
                 // ->date('Y M D H:i:s'),
