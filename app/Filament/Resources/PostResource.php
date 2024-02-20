@@ -47,7 +47,7 @@ class PostResource extends Resource
                     Section::make('image')->description('Post Details')
                     ->collapsible()
                     ->schema([
-                    FileUpload::make('thumbnail')->disk('/images')->directory('thumbnail')->required(),
+                    FileUpload::make('thumbnail')->disk('public')->directory('thumbnail')->required(),
                     ]),
                     Section::make('meta')->schema([
                         TagsInput::make('tags')->required(),
@@ -68,15 +68,22 @@ class PostResource extends Resource
     {
         return $table
             ->columns([
-                ImageColumn::make('thumbnail')
-                ->sortable()
-                ->searchable(),
+                ImageColumn::make('thumbnail'),
                 ColorColumn::make('color'),
-                TextColumn::make('title'),
+                TextColumn::make('title')->sortable()->searchable(),
                 TextColumn::make('slug'),
                 TextColumn::make('category.name'),
                 TextColumn::make('tags'),
                 CheckboxColumn::make('published'),
+                TextColumn::make('created_at')
+                ->label('Published on')
+                ->date('M D Y  H:i:s')
+                ->sortable()
+                ->searchable(),
+
+                // TextColumn::make('updated_at')
+                // ->label('Updated on')
+                // ->date('Y M D H:i:s'),
                 ])
             ->filters([
                 //
@@ -96,7 +103,6 @@ class PostResource extends Resource
             //
         ];
     }
-
     public static function getPages(): array
     {
         return [
