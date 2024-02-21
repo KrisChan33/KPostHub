@@ -28,7 +28,7 @@ class UserResource extends Resource
                 Section::make('Create a User Here')->description('')
                 ->schema([
                     TextInput::make('name')->required()->rules('max:50')->required(),
-                    TextInput::make('email')->email()->required()->suffix('@gmail.com'),
+                    TextInput::make('email')->email()->required()->suffix('@gmail.com')->unique(ignoreRecord:true),
                     Select::make('role')->required()->options([
                         'Admin' => 'Admin',
                         'Member' => 'Member',]),
@@ -46,10 +46,9 @@ class UserResource extends Resource
             ->columns([
                 TextColumn::make('name')->searchable()->sortable(),
                 TextColumn::make('email')->searchable()->sortable(),
-                TextColumn::make('password')->searchable()->sortable(),
-                TextColumn::make('role')->sortable()->searchable(),
-                TextColumn::make('created_at'),
-                TextColumn::make('updated_at'),
+                TextColumn::make('password'),
+                TextColumn::make('created_at')->date('d M Y')->sortable(),
+                TextColumn::make('updated_at')->date('d M Y')->sortable(),
             ])
             ->filters([
                 //

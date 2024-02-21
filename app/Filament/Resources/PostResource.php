@@ -40,7 +40,10 @@ class PostResource extends Resource
                 ->schema([
                     TextInput::make('title')->unique(ignoreRecord:true)->required()->rules('min:8| max:50'),
                     TextInput::make('slug')->required()->rules('min:8| max:50'),
-                    Select::make('category_id')->required()->label('Category')->options(Category::all()->pluck('name', 'id')),  
+                    Select::make('category_id')->required()->label('Category')
+                    ->relationship('category', 'name'), // this is the relationship between the category and the post/ also the name of the category
+                    
+                    // ->options(Category::all()->pluck('name', 'id')),  => this can call the database and slow down the app, so we use the query builder below
                     ColorPicker::make('color')->required()->rgba(), 
                     MarkdownEditor::make('content')->columnspan('full')->required()->rules('min:8| max:50'),
                     ])->columnSpan(3)->columns(2),
@@ -64,7 +67,7 @@ class PostResource extends Resource
                     'md'=>2,
                     'lg'=>3,
                     'xl'=>4]);
-    }   
+    }
     public static function table(Table $table): Table
     {
         return $table

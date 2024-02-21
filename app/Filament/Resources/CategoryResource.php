@@ -22,16 +22,14 @@ class CategoryResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $modelLabel = 'Post Category';
     public static function form(Form $form): Form
-    
     {
         return $form
             ->schema([
             Section::make('Input Name')
             ->description('Input Category Name')
             ->schema([
-                TextInput::make('name')->required(),
+                TextInput::make('name')->required()->rule('max:50'),
             ])->columnSpan(1),
-
             Section::make('Input Slug')
             ->description('Input Category Slug')
             ->schema([
@@ -64,7 +62,6 @@ class CategoryResource extends Resource
             //
         ];
     }
-
     public static function getPages(): array
     {
         return [
