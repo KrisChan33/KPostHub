@@ -39,6 +39,7 @@ class AdminPanelProvider extends PanelProvider
             // ->brandLogo(asset('images\doodle\icons8-logo-48.png'))->brandLogoHeight('50px')
             ->brandName('GreenBird')
             // ->brandUrl('https://greenbird.com') => this will redirect to the website
+            // ->darkmode(true)
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([

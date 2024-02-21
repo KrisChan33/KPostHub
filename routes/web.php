@@ -18,6 +18,5 @@ Route::get('/', function () {
 });
 
 Route::get('/component/layout', function () {
-    return view('app');  // This should match the name of your Blade file without the .blade.php extension
+    return view('component.layout.app');  // This should match the name of your Blade file without the .blade.php extension
 });
-
