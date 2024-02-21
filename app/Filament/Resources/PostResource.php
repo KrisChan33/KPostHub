@@ -30,7 +30,6 @@ use Illuminate\Validation\Rule;
 class PostResource extends Resource
 {
     protected static ?string $model = Post::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-pencil-square';
     public static function form(Form $form): Form
     {
@@ -51,7 +50,7 @@ class PostResource extends Resource
                     Section::make('image')->description('Post Details')
                     ->collapsible()
                     ->schema([
-                    FileUpload::make('thumbnail')->disk('public')->directory('thumbnail')->required(),
+                    FileUpload::make('thumbnail')->disk('public')->directory('/thumbnail')->required(),
                     ]),
                     Section::make('meta')->schema([
                         TagsInput::make('tags')->required(),
@@ -81,7 +80,7 @@ class PostResource extends Resource
                 CheckboxColumn::make('published'),
                 TextColumn::make('created_at')
                 ->label('Published on')
-                ->date('M D Y  H:i:s')
+                ->date('d M Y  H:i:s')
                 ->sortable()
                 ->searchable(),
                 // TextColumn::make('updated_at')
