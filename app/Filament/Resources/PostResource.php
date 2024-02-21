@@ -51,10 +51,11 @@ class PostResource extends Resource
                     MarkdownEditor::make('content')->columnspan('full')->required()->rules('min:8| max:50'),
                 ]),
                 Tab::make('Meta')->icon('heroicon-o-photo')->schema([
-                    FileUpload::make('thumbnail')->disk('public')->directory('/thumbnail')->required(),
+                    FileUpload::make('thumbnail')->disk('public')->directory('images')->required(),
                     TagsInput::make('tags')->required(),
                     Checkbox::make('published')->columnSpan(3)->columns(1),
                 ]),
+                
             ])->activeTab(1)->persistTabinQueryString(),
         ])->columns(1);
             }
@@ -89,13 +90,11 @@ class PostResource extends Resource
                 //         'md'=>2,
                 //         'lg'=>3,
                 //         'xl'=>4]);
-
-
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                ImageColumn::make('thumbnail'),
+                ImageColumn::make('thumbnail')->circular(),
                 ColorColumn::make('color'),
                 TextColumn::make('title')->sortable()->searchable(),
                 TextColumn::make('slug'),

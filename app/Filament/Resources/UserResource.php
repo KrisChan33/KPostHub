@@ -28,7 +28,7 @@ class UserResource extends Resource
                 Section::make('Create a User Here')->description('')
                 ->schema([
                     TextInput::make('name')->required()->rules('max:50')->required(),
-                    TextInput::make('email')->email()->required()->suffix('@gmail.com')->unique(ignoreRecord:true),
+                    TextInput::make('email')->email()->required()->suffix('@-gmail.com')->unique(ignoreRecord:true),
                     Select::make('role')->required()->options([
                         'Admin' => 'Admin',
                         'Member' => 'Member',]),
