@@ -25,59 +25,68 @@ use Filament\Tables\Columns\ColorColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\CheckboxColumn;
 use Filament\Forms\Components\Section;
- 
+use Illuminate\Validation\Rule;
+
 class PostResource extends Resource
 {
     protected static ?string $model = Post::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-pencil-square';
-
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Section::make('Create a Post')->description('Create a Post Here')
                 ->schema([
-                    TextInput::make('title')->required(),
-                    TextInput::make('slug')->required(),
-                    Select::make('category_id')->required()->label('Category')->options(Category::all()->pluck('name', 'id')),  
-                    ColorPicker::make('color')->required()->rgba(), 
-                    MarkdownEditor::make('content')->columnspan('full')->required(),
+                    TextInput::make('title')->unique(ignoreRecord:true)->required()->rules('min:8| max:50'),
+                    TextInput::make('slug')->required()->rules('min:8| max:50'),
+                    Select::make('category_id')->required()->label('Category')
+                    ->relationship('category', 'name'), // this is the relationship between the category and the post/ also the name of the category
                     
+                    // ->options(Category::all()->pluck('name', 'id')),  => this can call the database and slow down the app, so we use the query builder below
+                    ColorPicker::make('color')->required()->rgba(), 
+                    MarkdownEditor::make('content')->columnspan('full')->required()->rules('min:8| max:50'),
                     ])->columnSpan(3)->columns(2),
-                
                 Group::make()->schema([
                     Section::make('image')->description('Post Details')
                     ->collapsible()
                     ->schema([
-                    FileUpload::make('thumbnail')->disk('public')->directory('thumbnails')->required(),
+                    FileUpload::make('thumbnail')->disk('public')->directory('thumbnail')->required(),
                     ]),
                     Section::make('meta')->schema([
                         TagsInput::make('tags')->required(),
                         Checkbox::make('published'),
                     ]),
-                ])->columnSpan(1),
-                
+                ])->columnSpan([
+                    'default'=>1,
+                    'md'=>4,
+                    'lg'=>3,
+                    'xl'=>1]),
                 ])->columns([//using array to setup the columns responsive
                     'default'=>1,
                     'md'=>2,
                     'lg'=>3,
-                    'xl'=>4,
-                ]);
-
-                
-    }   
+                    'xl'=>4]);
+    }
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                ImageColumn::make('thumbnail')->circular(),
+                ImageColumn::make('thumbnail'),
                 ColorColumn::make('color'),
-                TextColumn::make('title'),
+                TextColumn::make('title')->sortable()->searchable(),
                 TextColumn::make('slug'),
                 TextColumn::make('category.name'),
                 TextColumn::make('tags'),
                 CheckboxColumn::make('published'),
+                TextColumn::make('created_at')
+                ->label('Published on')
+                ->date('M D Y  H:i:s')
+                ->sortable()
+                ->searchable(),
+                // TextColumn::make('updated_at')
+                // ->label('Updated on')
+                // ->date('Y M D H:i:s'),
                 ])
             ->filters([
                 //
@@ -91,14 +100,12 @@ class PostResource extends Resource
                 ]),
             ]);
     }
-
     public static function getRelations(): array
     {
         return [
             //
         ];
     }
-
     public static function getPages(): array
     {
         return [

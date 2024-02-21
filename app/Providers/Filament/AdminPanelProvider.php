@@ -28,8 +28,17 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->colors([
-                'primary' => Color::Amber,
-            ])
+                'danger' => Color::Rose,
+                'gray' => Color::Gray,
+                'info' => Color::Blue,
+                'primary' => Color::Indigo,
+                'success' => Color::Emerald,
+                'warning' => Color::Orange,
+            ])->font('Roboto Slab')
+            ->favicon(asset('images\doodle\icons8-logo-48.png'))
+            // ->brandLogo(asset('images\doodle\icons8-logo-48.png'))->brandLogoHeight('50px')
+            ->brandName('GreenBird')
+            // ->brandUrl('https://greenbird.com') => this will redirect to the website
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([

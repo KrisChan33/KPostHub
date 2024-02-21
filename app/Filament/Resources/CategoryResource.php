@@ -19,9 +19,7 @@ use App\Filament\Forms\Components\Group;
 class CategoryResource extends Resource
 {
     protected static ?string $model = Category::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
     protected static ?string $modelLabel = 'Post Category';
     public static function form(Form $form): Form
     {
@@ -30,24 +28,21 @@ class CategoryResource extends Resource
             Section::make('Input Name')
             ->description('Input Category Name')
             ->schema([
-                TextInput::make('name')->required(),
+                TextInput::make('name')->required()->rule('max:50'),
             ])->columnSpan(1),
-
-
             Section::make('Input Slug')
             ->description('Input Category Slug')
             ->schema([
-                TextInput::make('slug')->required(),
+                TextInput::make('slug')->required()->unique(ignoreRecord:true),
             ])->columnSpan(1),
             ])->columns(2);
     }
-
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                TextColumn::make('name'),
-                TextColumn::make('slug'),
+                TextColumn::make('name')->sortable()->searchable(),
+                TextColumn::make('slug')->sortable()->searchable(),
             ])
             ->filters([
                 //
@@ -67,7 +62,6 @@ class CategoryResource extends Resource
             //
         ];
     }
-
     public static function getPages(): array
     {
         return [

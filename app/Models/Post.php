@@ -22,9 +22,9 @@ class Post extends Model
         'published',
         'timestamps',
     ];
-
     protected $casts = [
         'tags' => 'array',
+        'published' => 'boolean',
     ];
 
     public function category()
