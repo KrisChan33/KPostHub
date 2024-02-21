@@ -65,6 +65,13 @@ class PostRelationManager extends RelationManager
             ->recordTitleAttribute('title')
             ->columns([
                 Tables\Columns\TextColumn::make('title'),
+                Tables\Columns\ImageColumn::make('thumbnail'),
+                Tables\Columns\ColorColumn::make('color'),
+                Tables\Columns\TextColumn::make('slug'),
+                Tables\Columns\TextColumn::make('tags'),
+                Tables\Columns\CheckboxColumn::make('published'),
+                Tables\Columns\TextColumn::make('created_at')
+
             ])
             ->filters([
                 //
