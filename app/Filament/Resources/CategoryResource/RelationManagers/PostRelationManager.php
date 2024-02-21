@@ -32,7 +32,6 @@ class PostRelationManager extends RelationManager
             ->schema([
                 TextInput::make('title')->unique(ignoreRecord:true)->required()->rules('min:8| max:50'),
                 TextInput::make('slug')->required()->rules('min:8| max:50'),
-                
                 // ->options(Category::all()->pluck('name', 'id')),  => this can call the database and slow down the app, so we use the query builder below
                 ColorPicker::make('color')->required()->rgba(), 
                 MarkdownEditor::make('content')->columnspan('full')->required()->rules('min:8| max:50'),
@@ -58,7 +57,6 @@ class PostRelationManager extends RelationManager
                 'lg'=>3,
                 'xl'=>4]);
     }
-
     public function table(Table $table): Table
     {
         return $table
@@ -89,4 +87,4 @@ class PostRelationManager extends RelationManager
                 ]),
             ]);
     }
-}
+}   
