@@ -3,13 +3,16 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\PostResource\Pages;
 use App\Filament\Resources\PostResource\RelationManagers;
 use App\Models\Category;
-use App\Models\Post;
+use App\Models\Post; 
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Forms\Components\Group;
 use Filament\Forms;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -28,6 +31,8 @@ use Filament\Forms\Components\Section;
 use Illuminate\Validation\Rule;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Tabs\Tab;
+use Filament\Tables\Filters\TernaryFilter;
+use PhpParser\Node\Stmt\Label;
 
 class PostResource extends Resource
 {
@@ -111,14 +116,32 @@ class PostResource extends Resource
                 // ->date('Y M D H:i:s'),
                 ])
             ->filters([
-                //
-            ])
+                Filter::make('Public Post')->query(
+                    function (Builder $query):Builder{
+                    return $query->where('published', true);
+                    }
+                ),
+                Filter::make('Public Post')->query(
+                    function (Builder $query):Builder{
+                    return $query->where('published', false);
+                    }
+                ),
+                // TernaryFilter::make('published'), = for yes or no /  bool
+                SelectFilter::make('category_id')
+                ->label('Category')
+                ->relationship('category','name')
+                // ->options(Category::all()->pluck('name','id'))
+                // ->searchable()
+                ->multiple()
+                // ->multiple(), = optional
+                ->preload(),
+                ])
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }
