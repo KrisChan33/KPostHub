@@ -13,7 +13,6 @@ return [
     | This will allow your users to receive real-time notifications.
     |
     */
-
     'broadcasting' => [
         // 'echo' => [
         //     'broadcaster' => 'pusher',
@@ -26,9 +25,7 @@ return [
         //     'disableStats' => true,
         //     'encrypted' => true,
         // ],
-
     ],
-
     /*
     |--------------------------------------------------------------------------
     | Default Filesystem Disk
@@ -67,7 +64,5 @@ return [
     | Livewire's standard 200ms delay.
     |
     */
-
     'livewire_loading_delay' => 'default',
-
 ];

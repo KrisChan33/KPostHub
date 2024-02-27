@@ -9,7 +9,11 @@ use PhpParser\Node\Expr\FuncCall;
 class Category extends Model
 {
     use HasFactory;
-    protected $fillable = ['name', 'slug', 'timestamps'];
+    protected $fillable = [
+        'id',
+        'name', 
+        'slug',
+        'timestamps'];
 
     public function post()
 {
