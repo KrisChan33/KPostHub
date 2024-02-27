@@ -4,8 +4,10 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\CommentResource\Pages;
 use App\Filament\Resources\CommentResource\RelationManagers;
+use App\Filament\Resources\PostResource\RelationManagers\CommentsRelationManager;
 use App\Models\Comment;
 use Filament\Forms;
+use Filament\Forms\Components\MorphToSelect;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -13,6 +15,12 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\Select;
+use App\Models\Post;
+use App\Models\User;
+use App\Models\Category;
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\TextColumn;
+
 
 class CommentResource extends Resource
 {
@@ -22,14 +30,24 @@ class CommentResource extends Resource
     {
         return $form
             ->schema([
-                Select::make('')->relationship('user','name')->required(),
+                Select::make('user_id')->relationship('user','name')->required()->searchable()->preload(),
+                TextInput::make('comment')->required(),
+                MorphToSelect::make('commentable')->types([
+                    MorphToSelect\Type::make(User::class)->titleAttribute('id'),
+                    MorphToSelect\Type::make(Post::class)->titleAttribute('title'),
+                    MorphToSelect\Type::make(Category::class)->titleAttribute('name'),
+                    MorphToSelect\Type::make(Comment::class)->titleAttribute('comment'),
+                ])->required()->searchable()->preload(),
             ]);
     }
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                //
+                TextColumn::make('user.name')->sortable()->searchable(),
+                TextColumn::make('commentable_id')->sortable()->searchable(),
+                TextColumn::make('commentable_type')->sortable()->searchable(),
+                TextColumn::make('comment')->sortable()->searchable(),
             ])
             ->filters([
                 //
@@ -39,15 +57,14 @@ class CommentResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }
-
     public static function getRelations(): array
     {
         return [
-            //
+            CommentsRelationManager::class,
         ];
     }
 

@@ -1,38 +1,29 @@
 <?php
 namespace App\Filament\Resources;
 use App\Filament\Resources\PostResource\Pages;
-use App\Filament\Resources\PostResource\RelationManagers;
-use App\Models\Category;
+use App\Filament\Resources\PostResource\RelationManagers\CategoryRelationManager;
+use App\Filament\Resources\PostResource\RelationManagers\CommentsRelationManager;
 use App\Models\Post; 
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
-use Filament\Forms\Components\Group;
-use Filament\Forms;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
-
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
-use Filament\Forms\Components\Toggle;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\FileUpload;
 use Filament\Tables\Columns\ColorColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\CheckboxColumn;
-use Filament\Forms\Components\Section;
-use Illuminate\Validation\Rule;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Tabs\Tab;
-use Filament\Tables\Filters\TernaryFilter;
-use PhpParser\Node\Stmt\Label;
 
 class PostResource extends Resource
 {
@@ -60,7 +51,6 @@ class PostResource extends Resource
                     TagsInput::make('tags')->required(),
                     Checkbox::make('published')->columnSpan(3)->columns(1),
                 ]),
-                
             ])->activeTab(1)->persistTabinQueryString(),
         ])->columns(1);
             }
@@ -148,7 +138,8 @@ class PostResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            CategoryRelationManager::class,
+            CommentsRelationManager::class,
         ];
     }
     public static function getPages(): array
