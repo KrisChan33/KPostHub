@@ -21,8 +21,10 @@ use App\Filament\Resources\CategoryResource\RelationManagers\PostsRelationManage
 class CategoryResource extends Resource
 {
     protected static ?string $model = Category::class;
+    protected static ?int $navigationSort = 1;
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $modelLabel = 'Post Category';
+    protected static ?string $navigationGroup = 'Post Management';
     public static function form(Form $form): Form
     {
         return $form
@@ -72,4 +74,14 @@ class CategoryResource extends Resource
             'edit' => Pages\EditCategory::route('/{record}/edit'),
         ];
     }
+    
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+    public static function getNavigationBadgeColor(): string|array|null
+    {
+        return static::getModel()::count() > 0 ? 'success' : 'danger';
+    }
 }
+

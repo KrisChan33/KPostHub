@@ -24,13 +24,18 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\CheckboxColumn;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Tabs\Tab;
+use Illuminate\Support\Facades\Auth;
 
 class PostResource extends Resource
 {
     protected static ?string $model = Post::class;
     protected static ?string $navigationIcon = 'heroicon-o-pencil-square';
+    protected static ?int $navigationSort = 2;
+    protected static ?string $navigationGroup = 'Post Management';
+
     public static function form(Form $form): Form
     {
+    $user = Auth::user();
         return $form
         ->schema([
             Tabs::make('Create a Post')->tabs([
@@ -52,6 +57,7 @@ class PostResource extends Resource
                     Checkbox::make('published')->columnSpan(3)->columns(1),
                 ]),
             ])->activeTab(1)->persistTabinQueryString(),
+            
         ])->columns(1);
             }
                 // ->schema([
@@ -142,6 +148,8 @@ class PostResource extends Resource
             CommentsRelationManager::class,
         ];
     }
+
+
     public static function getPages(): array
     {
         return [
@@ -149,5 +157,14 @@ class PostResource extends Resource
             'create' => Pages\CreatePost::route('/create'),
             'edit' => Pages\EditPost::route('/{record}/edit'),
         ];
+    }
+    
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+    public static function getNavigationBadgeColor(): string|array|null
+    {
+        return static::getModel()::count() > 0 ? 'success' : 'danger';
     }
 }

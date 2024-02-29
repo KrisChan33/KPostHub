@@ -17,9 +17,15 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\Section;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
+
 class UserResource extends Resource
 {
+    protected static ?int $navigationSort = 4;
     protected static ?string $model = User::class;
+    protected static ?string $navigationGroup = 'User Management';
+
     protected static ?string $navigationIcon = 'heroicon-o-user';
     public static function form(Form $form): Form
     {
@@ -46,6 +52,7 @@ class UserResource extends Resource
             ->columns([
                 TextColumn::make('name')->searchable()->sortable(),
                 TextColumn::make('email')->searchable()->sortable(),
+                TextColumn::make('role')->searchable(),
                 TextColumn::make('password'),
                 TextColumn::make('created_at')->date('d M Y')->sortable(),
                 TextColumn::make('updated_at')->date('d M Y')->sortable(),
@@ -62,7 +69,6 @@ class UserResource extends Resource
                 ]),
             ]);
     }
-
     public static function getRelations(): array
     {
         return [
@@ -77,5 +83,25 @@ class UserResource extends Resource
             'create' => Pages\CreateUser::route('/create'),
             'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
+    }
+
+    public static function canAccess(): bool
+    {
+        return Auth::user()->role === 'admin';
+    }
+    
+    public static function query()
+    {
+        return parent::query()->where('id', Auth::id());
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+    public static function getNavigationBadgeColor(): string|array|null
+
+    {
+        return static::getModel()::count() > 0 ? 'success' : 'danger';
     }
 }

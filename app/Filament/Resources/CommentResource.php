@@ -26,8 +26,12 @@ class CommentResource extends Resource
 {
     protected static ?string $model = Comment::class;
     protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-left-right';
+    protected static ?int $navigationSort = 3;
+    protected static ?string $navigationGroup = 'Post Management';
     public static function form(Form $form): Form
+
     {
+        
         return $form
             ->schema([
                 Select::make('user_id')->relationship('user','name')->required()->searchable()->preload(),
@@ -75,5 +79,14 @@ class CommentResource extends Resource
             'create' => Pages\CreateComment::route('/create'),
             'edit' => Pages\EditComment::route('/{record}/edit'),
         ];
+    }
+    
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+    public static function getNavigationBadgeColor(): string|array|null
+    {
+        return static::getModel()::count() > 0 ? 'success' : 'danger';
     }
 }
