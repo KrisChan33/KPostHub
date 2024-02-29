@@ -11,7 +11,6 @@ use Filament\Tables\Table;
 class CategoryRelationManager extends RelationManager
 {
     protected static string $relationship = 'category';
-
     public function form(Form $form): Form
     {
         return $form

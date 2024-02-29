@@ -23,7 +23,7 @@ class CommentsRelationManager extends RelationManager
                 TextInput::make('comment')->required(),
             ]);
     }
-
+    
     public function table(Table $table): Table
     {
         return $table->columns([

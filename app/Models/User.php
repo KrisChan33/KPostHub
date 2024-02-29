@@ -43,7 +43,7 @@ class User extends Authenticatable
     ];
     public function posts()
     {
-        return $this->belongstomany(Post::class, 'post_user', 'user_id', 'post_id')->withPivot([    'order'])->withTimestamps();
+        return $this->belongstomany(Post::class, 'post_user', 'user_id', 'post_id')->withPivot(['order'])->withTimestamps();
     }
     public function comments()
     {
