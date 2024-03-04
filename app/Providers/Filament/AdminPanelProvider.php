@@ -1,6 +1,12 @@
 <?php
 
 namespace App\Providers\Filament;
+use App\Filament\Widgets\AdminStatsOverview;
+use App\Filament\Widgets\CategoryChart;
+use App\Filament\Widgets\ListofPost;
+use App\Filament\Widgets\PostsChart;
+use Filament\Enums\ThemeMode;
+use Filament\Facades\Filament;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -34,6 +40,7 @@ class AdminPanelProvider extends PanelProvider
                 'success' => Color::Emerald,
                 'warning' => Color::Orange,
             ])->font('Roboto Slab')
+            
             ->favicon(asset('images\doodle\icons8-logo-48.png'))
             // ->brandLogo(asset('images\doodle\icons8-logo-48.png'))->brandLogoHeight('50px')
             ->brandName('K-Post')
@@ -42,12 +49,17 @@ class AdminPanelProvider extends PanelProvider
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
-                Pages\Dashboard::class,
+                // Pages\Dashboard::class,
+                // Filament\Pages\Dashboard::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
                 // Widgets\FilamentInfoWidget::class,
+                AdminStatsOverview::class,
+                CategoryChart::class,
+                ListofPost::class,
+                PostsChart::class,
             ])
             ->middleware([
                 EncryptCookies::class,
@@ -64,4 +76,12 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ]);
     }
+
+
+public function panels(Panel $panel): Panel
+{
+    return $panel
+        // ...
+        ->defaultThemeMode(ThemeMode::Light);
+}
 }

@@ -21,13 +21,12 @@ use App\Models\Category;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\TextColumn;
 
-
 class CommentResource extends Resource
 {
     protected static ?string $model = Comment::class;
     protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-left-right';
     protected static ?int $navigationSort = 3;
-    protected static ?string $navigationGroup = 'Post Management';
+    protected static ?string $navigationGroup = 'Blog';
     public static function form(Form $form): Form
 
     {

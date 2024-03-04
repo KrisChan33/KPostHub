@@ -17,8 +17,10 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\Section;
+use Filament\Tables\Filters\Filter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use PhpParser\Node\Stmt\ElseIf_;
 
 class UserResource extends Resource
 {
@@ -36,8 +38,9 @@ class UserResource extends Resource
                     TextInput::make('name')->required()->rules('max:50')->required(),
                     TextInput::make('email')->email()->required()->suffix('@-gmail.com')->unique(ignoreRecord:true),
                     Select::make('role')->required()->options([
-                        'Admin' => 'Admin',
-                        'Member' => 'Member',]),
+                        'Admin' => 'admin',
+                        'Member' => 'member',
+                        'User' => 'user',]),
                     TextInput::make('password')->autocomplete(true)->password()->required(),
                 ])->columnspanfull()->columns([
                     'default' => 2,
@@ -45,6 +48,7 @@ class UserResource extends Resource
                     'lg' => 2,
                 ]),
                     ]);
+
     }
     public static function table(Table $table): Table
     {
@@ -52,13 +56,40 @@ class UserResource extends Resource
             ->columns([
                 TextColumn::make('name')->searchable()->sortable(),
                 TextColumn::make('email')->searchable()->sortable(),
-                TextColumn::make('role')->searchable(),
+                TextColumn::make('role')
+                ->searchable()
+                ->badge()
+                ->color(function(string $state):string {
+                    return match($state){
+                        'admin' => 'success',
+                        'member' => 'warning',
+                        'user' => 'danger',
+                    };
+                }),
+                // ->color(function(string $state):string {
+                //     if ($state === 'admin') {
+                //         return 'success';
+                //     }
+                //     elseif ($state === 'member') {
+                //         return 'warning';
+                //     }
+                //     else {
+                //         return 'danger';
+                //     }
+                // }),
                 TextColumn::make('password'),
                 TextColumn::make('created_at')->date('d M Y')->sortable(),
                 TextColumn::make('updated_at')->date('d M Y')->sortable(),
             ])
             ->filters([
-                //
+                Filter::make('admin')
+                ->query(fn (Builder $query): Builder => $query->where('role', 'admin')),
+
+                Filter::make('member')
+                ->query(fn (Builder $query): Builder => $query->where('role', 'member')),
+
+                Filter::make('user')
+                ->query(fn (Builder $query): Builder => $query->where('role', 'user'))
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
