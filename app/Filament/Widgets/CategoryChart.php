@@ -17,7 +17,7 @@ class CategoryChart extends ChartWidget
         $data = Trend::model(Category::class)
         ->between(
             start: now()->startOfMonth(),
-            end: now()->endOfmonth(),
+            end: now(),//->endOfmonth(),
         )
         ->perDay()
         ->count();

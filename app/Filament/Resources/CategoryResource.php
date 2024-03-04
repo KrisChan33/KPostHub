@@ -17,14 +17,16 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Forms\Components\Group;
 use App\Filament\Resources\CategoryResource\RelationManagers\PostRelationManager;
 use App\Filament\Resources\CategoryResource\RelationManagers\PostsRelationManager;
-
+use Illuminate\Support\Str;
 class CategoryResource extends Resource
 {
     protected static ?string $model = Category::class;
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = 2;
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $modelLabel = 'Post Category';
-    protected static ?string $navigationGroup = 'Post Management';
+    protected static ?string $modelLabel = 'Category';
+    protected static ?string $navigationParentItem = 'Posts';
+    protected static ?string $navigationGroup = 'Blog';
+
     public static function form(Form $form): Form
     {
         return $form
@@ -32,7 +34,12 @@ class CategoryResource extends Resource
             Section::make('Input Name')
             ->description('Input Category Name')
             ->schema([
-                TextInput::make('name')->required()->rule('max:50'),
+                TextInput::make('name')->required()->rule('max:50')
+                ->live(onBlur: true)
+                // ->live(debounce:500)
+                ->afterStateUpdated(function(string $operation, string $state, Forms\Set $set){ //can also user $Forms\Get $get, Category $category this are parameters we can used
+                $set('slug', Str::slug($state));
+            }),
             ])->columnSpan(1),
             Section::make('Input Slug')
             ->description('Input Category Slug')
@@ -74,7 +81,6 @@ class CategoryResource extends Resource
             'edit' => Pages\EditCategory::route('/{record}/edit'),
         ];
     }
-    
     public static function getNavigationBadge(): ?string
     {
         return static::getModel()::count();

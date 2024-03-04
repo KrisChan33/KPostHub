@@ -30,11 +30,16 @@ class PostResource extends Resource
 {
     protected static ?string $model = Post::class;
     protected static ?string $navigationIcon = 'heroicon-o-pencil-square';
-    protected static ?int $navigationSort = 2;
-    protected static ?string $navigationGroup = 'Post Management';
+    protected static ?int $navigationSort = 1;
+    protected static ?string $navigationGroup = 'Blog';
+
+  
 
     public static function form(Form $form): Form
+    
     {
+    $userId = auth()->user()->id;
+
     $user = Auth::user();
         return $form
         ->schema([
