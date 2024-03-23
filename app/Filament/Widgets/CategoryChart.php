@@ -15,12 +15,12 @@ class CategoryChart extends ChartWidget
     protected function getData(): array
     {
         $data = Trend::model(Category::class)
-        ->between(
-            start: now()->startOfMonth(),
-            end: now(),//->endOfmonth(),
-        )
-        ->perDay()
-        ->count();
+            ->between(
+                start: now()->startOfMonth(),
+                end: now(), //->endOfmonth(),
+            )
+            ->perDay()
+            ->count();
         return [
             'datasets' => [
                 [

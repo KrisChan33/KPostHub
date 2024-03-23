@@ -28,14 +28,12 @@ class CommentResource extends Resource
     protected static ?int $navigationSort = 3;
     protected static ?string $navigationGroup = 'Blog';
     public static function form(Form $form): Form
-
     {
-        
         return $form
             ->schema([
                 Select::make('user_id')->relationship('user','name')->required()->searchable()->preload(),
                 TextInput::make('comment')->required(),
-                MorphToSelect::make('commentable')->types([
+                    MorphToSelect::make('commentable')->types([
                     MorphToSelect\Type::make(User::class)->titleAttribute('id'),
                     MorphToSelect\Type::make(Post::class)->titleAttribute('title'),
                     MorphToSelect\Type::make(Category::class)->titleAttribute('name'),

@@ -13,10 +13,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return redirect('/admin');
+// });
 
-Route::get('/component/layout', function () {
-    return view('component.layout.app');  // This should match the name of your Blade file without the .blade.php extension
+Route::get('/', function () {
+    return redirect('admin');
 });

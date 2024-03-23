@@ -26,7 +26,7 @@ class CategoryResource extends Resource
     protected static ?string $modelLabel = 'Category';
     protected static ?string $navigationParentItem = 'Posts';
     protected static ?string $navigationGroup = 'Blog';
-
+    
     public static function form(Form $form): Form
     {
         return $form
@@ -90,4 +90,3 @@ class CategoryResource extends Resource
         return static::getModel()::count() > 0 ? 'success' : 'danger';
     }
 }
-

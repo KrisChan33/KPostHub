@@ -52,7 +52,6 @@ class PostResource extends Resource
                     // ->options(Category::all()->pluck('name', 'id')),  => this can call the database and slow down the app, so we use the query builder below
                     ColorPicker::make('color')->required()->rgba(), 
                     ])->columnSpan(3)->columns(2),
-                    
                 Tab::make('Content')->icon('heroicon-o-newspaper')->schema([
                     MarkdownEditor::make('content')->columnspan('full')->required()->rules('min:8| max:50'),
                 ]),
@@ -61,8 +60,7 @@ class PostResource extends Resource
                     TagsInput::make('tags')->required(),
                     Checkbox::make('published')->columnSpan(3)->columns(1),
                 ]),
-            ])->activeTab(1)->persistTabinQueryString(),
-            
+            ])->activeTab(1)->persistTabinQueryString('PostTab'),
         ])->columns(1);
             }
                 // ->schema([
@@ -153,7 +151,6 @@ class PostResource extends Resource
             CommentsRelationManager::class,
         ];
     }
-
 
     public static function getPages(): array
     {

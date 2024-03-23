@@ -3,16 +3,18 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Laravel\Sanctum\HasApiTokens;
 use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasTenants;
+use Filament\Notifications\Collection;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
-
-
-class User extends Authenticatable 
+class User extends Authenticatable implements FilamentUser, HasTenants
 // class User extends Authenticatable implements FilamentUser
 {
     const ROLE_ADMIN = 'admin';
@@ -58,23 +60,39 @@ class User extends Authenticatable
     {
         return $this->belongstomany(Post::class, 'post_user', 'user_id', 'post_id')->withPivot(['order'])->withTimestamps();
     }
-    public function comments()
+    public function comments()  
     {
         return $this->morphMany(Comment::class, 'commentable');
     }
-
     public function admin()
     {
         return $this->role === self::ROLE_ADMIN;
     }
-
     public function member()
     {
         return $this->role === self::ROLE_MEMBER;
     }
-
     public function user()
     {
         return $this->role === self::ROLE_USER;
     }
+public function getTenants(Panel $panel): Collection
+    {
+        return $this->team;
+    }
+    public function teams(): BelongsToMany
+    {
+        return $this->belongsToMany(Team::class);
+    }
+    public function canAccessTenant(Model $tenant): bool
+    {
+        return $this->teams->contains($tenant);
+    }
+    
+    public function canAccessPanel($panel): bool
+    {
+    // Replace this with your actual implementation
+    return true;
+    }
+
 }
