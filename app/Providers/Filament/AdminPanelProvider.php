@@ -1,12 +1,14 @@
 <?php
 
 namespace App\Providers\Filament;
+use App\Filament\Pages\Auth\EditProfile;
+use App\Filament\Pages\Tenancy\EditTeamProfile;
 use App\Filament\Widgets\AdminStatsOverview;
 use App\Filament\Widgets\CategoryChart;
 use App\Filament\Widgets\ListofPost;
 use App\Filament\Widgets\PostsChart;
+use App\Models\Team;
 use Filament\Enums\ThemeMode;
-use Filament\Facades\Filament;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -22,6 +24,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use RegisterTeam;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -32,6 +35,11 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->registration()
+            ->emailVerification()
+            ->passwordReset()
+            //->profile(EditProfile::class)
+            ->profile(isSimple: false)
             ->colors([
                 'danger' => Color::Rose,
                 'gray' => Color::Gray,
@@ -40,7 +48,6 @@ class AdminPanelProvider extends PanelProvider
                 'success' => Color::Emerald,
                 'warning' => Color::Orange,
             ])->font('Roboto Slab')
-            
             ->favicon(asset('images\doodle\icons8-logo-48.png'))
             // ->brandLogo(asset('images\doodle\icons8-logo-48.png'))->brandLogoHeight('50px')
             ->brandName('K-Post')
@@ -77,11 +84,14 @@ class AdminPanelProvider extends PanelProvider
             ]);
     }
 
-
 public function panels(Panel $panel): Panel
 {
     return $panel
         // ...
-        ->defaultThemeMode(ThemeMode::Light);
+        // ->tenantProfile(RegistryTeam::class)
+        ->tenant(Team::class, ownershipRelationship: 'team')
+        ->defaultThemeMode(ThemeMode::Light)
+        ->tenantRegistration(RegisterTeam::class)
+        ->tenantProfile(EditTeamProfile::class);
 }
 }
