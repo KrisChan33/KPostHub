@@ -22,9 +22,8 @@ class CategoryPolicy
     public function view(User $user): bool
     {
         return $user->admin() || $user->member();
-
     }
-    
+
     /**
      * Determine whether the user can create models.
      */
@@ -66,6 +65,6 @@ class CategoryPolicy
      */
     public function forceDelete(User $user): bool
     {
-        return $user->admin() ;
+        return $user->admin();
     }
 }

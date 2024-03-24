@@ -34,20 +34,21 @@ class UserResource extends Resource
         return $form
             ->schema([
                 Section::make('Create a User Here')->description('')
-                ->schema([
-                    TextInput::make('name')->required()->rules('max:50')->required(),
-                    TextInput::make('email')->email()->required()->suffix('@-gmail.com')->unique(ignoreRecord:true),
-                    Select::make('role')->required()->options([
-                        'Admin' => 'admin',
-                        'Member' => 'member',
-                        'User' => 'user',]),
-                    TextInput::make('password')->autocomplete(true)->password()->required(),
-                ])->columnspanfull()->columns([
-                    'default' => 2,
-                    'md' => 2,  
-                    'lg' => 2,
-                ]),
-                    ]);
+                    ->schema([
+                        TextInput::make('name')->required()->rules('max:50')->required(),
+                        TextInput::make('email')->email()->required()->suffix('@-gmail.com')->unique(ignoreRecord: true),
+                        Select::make('role')->required()->options([
+                            'Admin' => 'admin',
+                            'Member' => 'member',
+                            'User' => 'user',
+                        ]),
+                        TextInput::make('password')->autocomplete(true)->password()->required(),
+                    ])->columnspanfull()->columns([
+                        'default' => 2,
+                        'md' => 2,
+                        'lg' => 2,
+                    ]),
+            ]);
     }
     public static function table(Table $table): Table
     {
@@ -56,15 +57,15 @@ class UserResource extends Resource
                 TextColumn::make('name')->searchable()->sortable(),
                 TextColumn::make('email')->searchable()->sortable(),
                 TextColumn::make('role')
-                ->searchable()
-                ->badge()
-                ->color(function(string $state):string {
-                    return match($state){
-                        'admin' => 'success',
-                        'member' => 'warning',
-                        'user' => 'danger',
-                    };
-                }),
+                    ->searchable()
+                    ->badge()
+                    ->color(function (string $state): string {
+                        return match ($state) {
+                            'admin' => 'success',
+                            'member' => 'warning',
+                            'user' => 'danger',
+                        };
+                    }),
                 // ->color(function(string $state):string {
                 //     if ($state === 'admin') {
                 //         return 'success';
@@ -82,13 +83,13 @@ class UserResource extends Resource
             ])
             ->filters([
                 Filter::make('admin')
-                ->query(fn (Builder $query): Builder => $query->where('role', 'admin')),
+                    ->query(fn (Builder $query): Builder => $query->where('role', 'admin')),
 
                 Filter::make('member')
-                ->query(fn (Builder $query): Builder => $query->where('role', 'member')),
+                    ->query(fn (Builder $query): Builder => $query->where('role', 'member')),
 
                 Filter::make('user')
-                ->query(fn (Builder $query): Builder => $query->where('role', 'user'))
+                    ->query(fn (Builder $query): Builder => $query->where('role', 'user'))
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -119,7 +120,7 @@ class UserResource extends Resource
     {
         return Auth::user()->role === 'admin';
     }
-    
+
     public static function query()
     {
         return parent::query()->where('id', Auth::id());

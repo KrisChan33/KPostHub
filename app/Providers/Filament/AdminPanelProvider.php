@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Providers\Filament;
+
 use App\Filament\Pages\Auth\EditProfile;
 use App\Filament\Pages\Tenancy\EditTeamProfile;
 use App\Filament\Widgets\AdminStatsOverview;
@@ -50,7 +51,8 @@ class AdminPanelProvider extends PanelProvider
             ])->font('Roboto Slab')
             ->favicon(asset('images\doodle\icons8-logo-48.png'))
             // ->brandLogo(asset('images\doodle\icons8-logo-48.png'))->brandLogoHeight('50px')
-            ->brandName('K-Post')
+            // ->brandName('k-internship-Daily-Accomplishment-Report-sys')
+            ->brandName('K-DARS')
             // ->brandUrl('https://greenbird.com') => this will redirect to the website
             // ->darkmode(true)
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
@@ -84,14 +86,14 @@ class AdminPanelProvider extends PanelProvider
             ]);
     }
 
-public function panels(Panel $panel): Panel
-{
-    return $panel
-        // ...
-        // ->tenantProfile(RegistryTeam::class)
-        ->tenant(Team::class, ownershipRelationship: 'team')
-        ->defaultThemeMode(ThemeMode::Light)
-        ->tenantRegistration(RegisterTeam::class)
-        ->tenantProfile(EditTeamProfile::class);
-}
+    public function panels(Panel $panel): Panel
+    {
+        return $panel
+            // ...
+            // ->tenantProfile(RegistryTeam::class)
+            ->tenant(Team::class, ownershipRelationship: 'team')
+            ->defaultThemeMode(ThemeMode::Light)
+            ->tenantRegistration(RegisterTeam::class)
+            ->tenantProfile(EditTeamProfile::class);
+    }
 }
