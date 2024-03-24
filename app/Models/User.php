@@ -38,7 +38,7 @@ class User extends Authenticatable implements FilamentUser, HasTenants
         'name',
         'email',
         'password',
-        'role',
+        // 'role',
     ];
     /**
      * The attributes that should be hidden for serialization.
@@ -68,7 +68,7 @@ class User extends Authenticatable implements FilamentUser, HasTenants
     }
     public function admin()
     {
-        return $this->role === self::ROLE_ADMIN;
+        return $this->role->role->role === self::ROLE_ADMIN;
     }
     public function member()
     {
@@ -76,7 +76,7 @@ class User extends Authenticatable implements FilamentUser, HasTenants
     }
     public function user()
     {
-        return $this->role === self::ROLE_USER;
+        return $this->role->role === self::ROLE_USER;
     }
     public function getTenants(Panel $panel): Collection
     {
