@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Models;
-
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Laravel\Sanctum\HasApiTokens;
 use Filament\Models\Contracts\FilamentUser;
@@ -13,6 +12,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Role;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class User extends Authenticatable implements FilamentUser, HasTenants
 // class User extends Authenticatable implements FilamentUser
@@ -33,6 +34,7 @@ class User extends Authenticatable implements FilamentUser, HasTenants
     // }
     protected $fillable = [
         'id',
+        'role_id',
         'name',
         'email',
         'password',
@@ -60,7 +62,7 @@ class User extends Authenticatable implements FilamentUser, HasTenants
     {
         return $this->belongstomany(Post::class, 'post_user', 'user_id', 'post_id')->withPivot(['order'])->withTimestamps();
     }
-    public function comments()  
+    public function comments()
     {
         return $this->morphMany(Comment::class, 'commentable');
     }
@@ -76,7 +78,7 @@ class User extends Authenticatable implements FilamentUser, HasTenants
     {
         return $this->role === self::ROLE_USER;
     }
-public function getTenants(Panel $panel): Collection
+    public function getTenants(Panel $panel): Collection
     {
         return $this->team;
     }
@@ -88,11 +90,13 @@ public function getTenants(Panel $panel): Collection
     {
         return $this->teams->contains($tenant);
     }
-    
+    public function role(): BelongsTo
+    {
+        return $this->belongsTo(Role::class, 'role_id');
+    }
     public function canAccessPanel($panel): bool
     {
-    // Replace this with your actual implementation
-    return true;
+        // Replace this with your actual implementation
+        return true;
     }
-
 }

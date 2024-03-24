@@ -1,9 +1,11 @@
 <?php
+
 namespace App\Filament\Resources;
+
 use App\Filament\Resources\PostResource\Pages;
 use App\Filament\Resources\PostResource\RelationManagers\CategoryRelationManager;
 use App\Filament\Resources\PostResource\RelationManagers\CommentsRelationManager;
-use App\Models\Post; 
+use App\Models\Post;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Forms\Components\Checkbox;
@@ -33,67 +35,67 @@ class PostResource extends Resource
     protected static ?int $navigationSort = 1;
     protected static ?string $navigationGroup = 'Blog';
 
-  
+
 
     public static function form(Form $form): Form
-    
-    {
-    $userId = auth()->user()->id;
 
-    $user = Auth::user();
+    {
+        $userId = auth()->user()->id;
+
+        $user = Auth::user();
         return $form
-        ->schema([
-            Tabs::make('Create a Post')->tabs([
-                Tab::make('Create a Post')->icon('heroicon-o-pencil') ->schema([
-                    TextInput::make('title')->unique(ignoreRecord:true)->required()->rules('min:8| max:50'),
-                    TextInput::make('slug')->required()->rules('min:8| max:50'),
-                    Select::make('category_id')->required()->label('Category')
-                    ->relationship('category', 'name'), // this is the relationship between the category and the post/ also the name of the category
-                    // ->options(Category::all()->pluck('name', 'id')),  => this can call the database and slow down the app, so we use the query builder below
-                    ColorPicker::make('color')->required()->rgba(), 
+            ->schema([
+                Tabs::make('Create a Post')->tabs([
+                    Tab::make('Create a Post')->icon('heroicon-o-pencil')->schema([
+                        TextInput::make('title')->unique(ignoreRecord: true)->required()->rules('min:8| max:50'),
+                        TextInput::make('slug')->required()->rules('min:8| max:50'),
+                        Select::make('category_id')->required()->label('Category')
+                            ->relationship('category', 'name'), // this is the relationship between the category and the post/ also the name of the category
+                        // ->options(Category::all()->pluck('name', 'id')),  => this can call the database and slow down the app, so we use the query builder below
+                        ColorPicker::make('color')->required()->rgba(),
                     ])->columnSpan(3)->columns(2),
-                Tab::make('Content')->icon('heroicon-o-newspaper')->schema([
-                    MarkdownEditor::make('content')->columnspan('full')->required()->rules('min:8| max:50'),
-                ]),
-                Tab::make('Meta')->icon('heroicon-o-photo')->schema([
-                    FileUpload::make('thumbnail')->disk('public')->directory('images')->required(),
-                    TagsInput::make('tags')->required(),
-                    Checkbox::make('published')->columnSpan(3)->columns(1),
-                ]),
-            ])->activeTab(1)->persistTabinQueryString('PostTab'),
-        ])->columns(1);
-            }
-                // ->schema([
-                //     Section::make('Create a Post')->description('Create a Post Here')
-                //     ->schema([
-                //         TextInput::make('title')->unique(ignoreRecord:true)->required()->rules('min:8| max:50'),
-                //         TextInput::make('slug')->required()->rules('min:8| max:50'),
-                //         Select::make('category_id')->required()->label('Category')
-                //         ->relationship('category', 'name'), // this is the relationship between the category and the post/ also the name of the category
-                //         // ->options(Category::all()->pluck('name', 'id')),  => this can call the database and slow down the app, so we use the query builder below
-                //         ColorPicker::make('color')->required()->rgba(), 
-                //         MarkdownEditor::make('content')->columnspan('full')->required()->rules('min:8| max:50'),
-                //         ])->columnSpan(3)->columns(2),
-                //     Group::make()->schema([
-                //         Section::make('image')->description('Post Details')
-                //         ->collapsible()
-                //         ->schema([
-                //         FileUpload::make('thumbnail')->disk('public')->directory('/thumbnail')->required(),
-                //         ]),
-                //         Section::make('meta')->schema([
-                //             TagsInput::make('tags')->required(),
-                //             Checkbox::make('published'),
-                //         ]),
-                //     ])->columnSpan([
-                //         'default'=>1,
-                //         'md'=>4,
-                //         'lg'=>3,
-                //         'xl'=>1]),
-                //     ])->columns([//using array to setup the columns responsive
-                //         'default'=>1,
-                //         'md'=>2,
-                //         'lg'=>3,
-                //         'xl'=>4]);
+                    Tab::make('Content')->icon('heroicon-o-newspaper')->schema([
+                        MarkdownEditor::make('content')->columnspan('full')->required()->rules('min:8| max:50'),
+                    ]),
+                    Tab::make('Meta')->icon('heroicon-o-photo')->schema([
+                        FileUpload::make('thumbnail')->disk('public')->directory('images')->required(),
+                        TagsInput::make('tags')->required(),
+                        Checkbox::make('published')->columnSpan(3)->columns(1),
+                    ]),
+                ])->activeTab(1)->persistTabinQueryString('PostTab'),
+            ])->columns(1);
+    }
+    // ->schema([
+    //     Section::make('Create a Post')->description('Create a Post Here')
+    //     ->schema([
+    //         TextInput::make('title')->unique(ignoreRecord:true)->required()->rules('min:8| max:50'),
+    //         TextInput::make('slug')->required()->rules('min:8| max:50'),
+    //         Select::make('category_id')->required()->label('Category')
+    //         ->relationship('category', 'name'), // this is the relationship between the category and the post/ also the name of the category
+    //         // ->options(Category::all()->pluck('name', 'id')),  => this can call the database and slow down the app, so we use the query builder below
+    //         ColorPicker::make('color')->required()->rgba(), 
+    //         MarkdownEditor::make('content')->columnspan('full')->required()->rules('min:8| max:50'),
+    //         ])->columnSpan(3)->columns(2),
+    //     Group::make()->schema([
+    //         Section::make('image')->description('Post Details')
+    //         ->collapsible()
+    //         ->schema([
+    //         FileUpload::make('thumbnail')->disk('public')->directory('/thumbnail')->required(),
+    //         ]),
+    //         Section::make('meta')->schema([
+    //             TagsInput::make('tags')->required(),
+    //             Checkbox::make('published'),
+    //         ]),
+    //     ])->columnSpan([
+    //         'default'=>1,
+    //         'md'=>4,
+    //         'lg'=>3,
+    //         'xl'=>1]),
+    //     ])->columns([//using array to setup the columns responsive
+    //         'default'=>1,
+    //         'md'=>2,
+    //         'lg'=>3,
+    //         'xl'=>4]);
     public static function table(Table $table): Table
     {
         return $table
@@ -106,41 +108,41 @@ class PostResource extends Resource
                 TextColumn::make('tags'),
                 CheckboxColumn::make('published'),
                 TextColumn::make('created_at')
-                ->label('Published on')
-                ->date('d M Y  H:i:s')
-                ->sortable()
-                ->searchable(),
+                    ->label('Published on')
+                    ->date('d M Y  H:i:s')
+                    ->sortable()
+                    ->searchable(),
                 // TextColumn::make('updated_at')
                 // ->label('Updated on')
                 // ->date('Y M D H:i:s'),
-                ])
+            ])
             ->filters([
                 Filter::make('Public Post')->query(
-                    function (Builder $query):Builder{
-                    return $query->where('published', true);
+                    function (Builder $query): Builder {
+                        return $query->where('published', true);
                     }
                 ),
                 Filter::make('Public Post')->query(
-                    function (Builder $query):Builder{
-                    return $query->where('published', false);
+                    function (Builder $query): Builder {
+                        return $query->where('published', false);
                     }
                 ),
                 // TernaryFilter::make('published'), = for yes or no /  bool
                 SelectFilter::make('category_id')
-                ->label('Category')
-                ->relationship('category','name')
-                // ->options(Category::all()->pluck('name','id'))
-                // ->searchable()
-                ->multiple()
-                // ->multiple(), = optional
-                ->preload(),
-                ])
+                    ->label('Category')
+                    ->relationship('category', 'name')
+                    // ->options(Category::all()->pluck('name','id'))
+                    // ->searchable()
+                    ->multiple()
+                    // ->multiple(), = optional
+                    ->preload(),
+            ])
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -160,7 +162,7 @@ class PostResource extends Resource
             'edit' => Pages\EditPost::route('/{record}/edit'),
         ];
     }
-    
+
     public static function getNavigationBadge(): ?string
     {
         return static::getModel()::count();
