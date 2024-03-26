@@ -149,8 +149,8 @@ class PostResource extends Resource
     public static function getRelations(): array
     {
         return [
-            CategoryRelationManager::class,
-            CommentsRelationManager::class,
+            // CategoryRelationManager::class,
+            // CommentsRelationManager::class,
         ];
     }
 

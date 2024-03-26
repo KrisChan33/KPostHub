@@ -10,7 +10,7 @@ class PostPolicy
 {
     public function viewAny(User $user): bool
     {
-    return true;
+        return true;
     }
     /**
      * Determine whether the user can view the model.
@@ -24,7 +24,7 @@ class PostPolicy
      */
     public function create(User $user): bool
     {
-        return $user->admin()|| $user->user() || $user->member();
+        return true;
     }
     /**
      * Determine whether the user can update the model.
@@ -43,7 +43,7 @@ class PostPolicy
      */
     public function deleteAny(User $user): bool
     {
-        return $user->admin()|| $user->user();
+        return $user->admin() || $user->user();
     }
     /**
      * Determine whether the user can restore the model.
@@ -57,17 +57,16 @@ class PostPolicy
      */
     public function forceDeleteAny(User $user): bool
     {
-        return $user->admin()|| $user->user();
+        return $user->admin();
     }
-  
+
     public function restore(User $user): bool
     {
-        return $user->admin() || $user->user();
+        return $user->admin();
     }
 
     public function reorder(User $user): bool
     {
-        return $user->admin()|| $user->user();
+        return $user->admin();
     }
-
 }

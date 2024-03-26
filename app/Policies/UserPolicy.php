@@ -12,14 +12,14 @@ class UserPolicy
      */
     public function viewAny(User $user): bool
     {
-    return $user->admin();
+        return $user->admin();
     }
     /**
      * Determine whether the user can view the model.
      */
     public function view(User $user, User $model): bool
     {
-    return $user->admin();
+        return $user->admin();
     }
 
     /**
@@ -36,13 +36,12 @@ class UserPolicy
     public function update(User $user, User $model): bool
     {
         return $user->admin();
-
     }
     public function delete(User $user, User $model): bool
     {
         return $user->admin();
     }
-    
+
     /**
      * Determine whether the user can delete the model.
      */
