@@ -10,15 +10,17 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 
 class RoleResource extends Resource
 {
     protected static ?string $model = Role::class;
-
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'User Management';
+    protected static ?string $navigationIcon = 'heroicon-o-identification';
 
     public static function form(Form $form): Form
     {
@@ -36,7 +38,19 @@ class RoleResource extends Resource
     {
         return $table
             ->columns([
-                //
+                TextColumn::make('role')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable()
+                    ->icon('heroicon-s-identification')
+                    ->iconColor('info'),
+
+                TextColumn::make('description')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable()
+                    ->icon('heroicon-s-document-text')
+                    ->iconColor('info'),
             ])
             ->filters([
                 //
@@ -65,5 +79,10 @@ class RoleResource extends Resource
             'create' => Pages\CreateRole::route('/create'),
             'edit' => Pages\EditRole::route('/{record}/edit'),
         ];
+    }
+
+    public static function canAccess(): bool
+    {
+        return Auth::user()->role->role === 'admin';
     }
 }

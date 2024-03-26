@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\Section;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\Filterz;
+use Illuminate\Database\Eloquent\Factories\Relationship;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use PhpParser\Node\Stmt\ElseIf_;
@@ -28,7 +29,7 @@ class UserResource extends Resource
     protected static ?int $navigationSort = 4;
     protected static ?string $model = User::class;
     protected static ?string $navigationGroup = 'User Management';
-    protected static ?string $navigationIcon = 'heroicon-o-user';
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
     public static function form(Form $form): Form
     {
         return $form
@@ -37,11 +38,9 @@ class UserResource extends Resource
                     ->schema([
                         TextInput::make('name')->required()->rules('max:50')->required(),
                         TextInput::make('email')->email()->required()->suffix('@-gmail.com')->unique(ignoreRecord: true),
-                        Select::make('role')->required()->options([
-                            'Admin' => 'admin',
-                            'Member' => 'member',
-                            'User' => 'user',
-                        ]),
+                        Select::make('role')
+                            ->required()
+                            ->Relationship('role', 'role'),
                         TextInput::make('password')->autocomplete(true)->password()->required(),
                     ])->columnspanfull()->columns([
                         'default' => 2,
@@ -56,7 +55,8 @@ class UserResource extends Resource
             ->columns([
                 TextColumn::make('name')->searchable()->sortable(),
                 TextColumn::make('email')->searchable()->sortable(),
-                TextColumn::make('role')
+                TextColumn::make('role.role')
+                    ->label('Role')
                     ->searchable()
                     ->badge()
                     ->color(function (string $state): string {
@@ -118,7 +118,7 @@ class UserResource extends Resource
 
     public static function canAccess(): bool
     {
-        return Auth::user()->role === 'admin';
+        return Auth::user()->role->role === 'admin';
     }
 
     public static function query()

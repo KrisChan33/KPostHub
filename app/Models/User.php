@@ -62,17 +62,13 @@ class User extends Authenticatable implements FilamentUser, HasTenants
     {
         return $this->belongstomany(Post::class, 'post_user', 'user_id', 'post_id')->withPivot(['order'])->withTimestamps();
     }
-    public function comments()
-    {
-        return $this->morphMany(Comment::class, 'commentable');
-    }
     public function admin()
     {
-        return $this->role->role->role === self::ROLE_ADMIN;
+        return $this->role->role === self::ROLE_ADMIN;
     }
     public function member()
     {
-        return $this->role === self::ROLE_MEMBER;
+        return $this->role->role === self::ROLE_MEMBER;
     }
     public function user()
     {
@@ -82,10 +78,7 @@ class User extends Authenticatable implements FilamentUser, HasTenants
     {
         return $this->team;
     }
-    public function teams(): BelongsToMany
-    {
-        return $this->belongsToMany(Team::class);
-    }
+
     public function canAccessTenant(Model $tenant): bool
     {
         return $this->teams->contains($tenant);

@@ -17,12 +17,12 @@ class ListUsers extends ListRecords
 {
     protected static string $resource = UserResource::class;
     public ?User $record;
-    protected function getHeaderWidgets():array
+    protected function getHeaderWidgets(): array
     {
         return [
-        // PostsChart::class,
-            Practicing::class,
-    ];
+            // PostsChart::class,
+            // Practicing::class,
+        ];
     }
     protected function getFooterWidgets(): array
     {
