@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\RoleResource\Pages;
 
 use App\Filament\Resources\RoleResource;
+use Doctrine\DBAL\Schema\Index;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 

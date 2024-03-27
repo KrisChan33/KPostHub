@@ -21,6 +21,8 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Group;
+use Filament\Forms\Components\Section;
 use Filament\Tables\Columns\ColorColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\CheckboxColumn;
@@ -33,7 +35,8 @@ class PostResource extends Resource
     protected static ?string $model = Post::class;
     protected static ?string $navigationIcon = 'heroicon-o-pencil-square';
     protected static ?int $navigationSort = 1;
-    protected static ?string $navigationGroup = 'Blog';
+    protected static ?string $navigationGroup = 'Record Management';
+
 
 
 
@@ -44,58 +47,61 @@ class PostResource extends Resource
 
         $user = Auth::user();
         return $form
+            //         ->schema([
+            //             Tabs::make('Create a Post')->tabs([
+            //                 Tab::make('Create a Post')->icon('heroicon-o-pencil')->schema([
+            //                     TextInput::make('title')->unique(ignoreRecord: true)->required()->rules('min:8| max:100'),
+            //                     TextInput::make('slug')->required()->rules('min:8| max:100'),
+            //                     Select::make('category_id')->required()->label('Category')
+            //                         ->relationship('category', 'name'), // this is the relationship between the category and the post/ also the name of the category
+            //                     // ->options(Category::all()->pluck('name', 'id')),  => this can call the database and slow down the app, so we use the query builder below
+            //                     ColorPicker::make('color')->required()->rgba(),
+            //                 ])->columnSpan(3)->columns(2),
+            //                 Tab::make('Content')->icon('heroicon-o-newspaper')->schema([
+            //                     MarkdownEditor::make('content')->columnspan('full')->required()->rules('min:8| max:1000'),
+            //                 ]),
+            //                 Tab::make('Meta')->icon('heroicon-o-photo')->schema([
+            //                     FileUpload::make('thumbnail')->disk('public')->directory('images')->required(),
+            //                     TagsInput::make('tags')->required(),
+            //                     Checkbox::make('published')->columnSpan(3)->columns(1),
+            //                 ]),
+            //             ])->activeTab(1)->persistTabinQueryString('PostTab'),
+            //         ])->columns(1);
+            // }
             ->schema([
-                Tabs::make('Create a Post')->tabs([
-                    Tab::make('Create a Post')->icon('heroicon-o-pencil')->schema([
+                Section::make('Create a Post')->description('Create a Post Here')
+                    ->schema([
                         TextInput::make('title')->unique(ignoreRecord: true)->required()->rules('min:8| max:50'),
                         TextInput::make('slug')->required()->rules('min:8| max:50'),
                         Select::make('category_id')->required()->label('Category')
                             ->relationship('category', 'name'), // this is the relationship between the category and the post/ also the name of the category
                         // ->options(Category::all()->pluck('name', 'id')),  => this can call the database and slow down the app, so we use the query builder below
                         ColorPicker::make('color')->required()->rgba(),
+                        MarkdownEditor::make('content')->columnspan('full')->required()->rules('min:8| max:2500'),
                     ])->columnSpan(3)->columns(2),
-                    Tab::make('Content')->icon('heroicon-o-newspaper')->schema([
-                        MarkdownEditor::make('content')->columnspan('full')->required()->rules('min:8| max:50'),
-                    ]),
-                    Tab::make('Meta')->icon('heroicon-o-photo')->schema([
-                        FileUpload::make('thumbnail')->disk('public')->directory('images')->required(),
+                Group::make()->schema([
+                    Section::make('image')->description('Post Details')
+                        ->collapsible()
+                        ->schema([
+                            FileUpload::make('thumbnail')->disk('public')->directory('/thumbnail')->required(),
+                        ]),
+                    Section::make('meta')->schema([
                         TagsInput::make('tags')->required(),
-                        Checkbox::make('published')->columnSpan(3)->columns(1),
+                        Checkbox::make('published'),
                     ]),
-                ])->activeTab(1)->persistTabinQueryString('PostTab'),
-            ])->columns(1);
+                ])->columnSpan([
+                    'default' => 1,
+                    'md' => 4,
+                    'lg' => 3,
+                    'xl' => 1
+                ]),
+            ])->columns([ //using array to setup the columns responsive
+                'default' => 1,
+                'md' => 2,
+                'lg' => 3,
+                'xl' => 4
+            ]);
     }
-    // ->schema([
-    //     Section::make('Create a Post')->description('Create a Post Here')
-    //     ->schema([
-    //         TextInput::make('title')->unique(ignoreRecord:true)->required()->rules('min:8| max:50'),
-    //         TextInput::make('slug')->required()->rules('min:8| max:50'),
-    //         Select::make('category_id')->required()->label('Category')
-    //         ->relationship('category', 'name'), // this is the relationship between the category and the post/ also the name of the category
-    //         // ->options(Category::all()->pluck('name', 'id')),  => this can call the database and slow down the app, so we use the query builder below
-    //         ColorPicker::make('color')->required()->rgba(), 
-    //         MarkdownEditor::make('content')->columnspan('full')->required()->rules('min:8| max:50'),
-    //         ])->columnSpan(3)->columns(2),
-    //     Group::make()->schema([
-    //         Section::make('image')->description('Post Details')
-    //         ->collapsible()
-    //         ->schema([
-    //         FileUpload::make('thumbnail')->disk('public')->directory('/thumbnail')->required(),
-    //         ]),
-    //         Section::make('meta')->schema([
-    //             TagsInput::make('tags')->required(),
-    //             Checkbox::make('published'),
-    //         ]),
-    //     ])->columnSpan([
-    //         'default'=>1,
-    //         'md'=>4,
-    //         'lg'=>3,
-    //         'xl'=>1]),
-    //     ])->columns([//using array to setup the columns responsive
-    //         'default'=>1,
-    //         'md'=>2,
-    //         'lg'=>3,
-    //         'xl'=>4]);
     public static function table(Table $table): Table
     {
         return $table

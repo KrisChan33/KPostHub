@@ -22,26 +22,33 @@ use Filament\Tables\Filters\Filterz;
 use Illuminate\Database\Eloquent\Factories\Relationship;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use PhpParser\Node\Stmt\ElseIf_;
 
 class UserResource extends Resource
 {
-    protected static ?int $navigationSort = 4;
+    protected static ?int $navigationSort = 1;
     protected static ?string $model = User::class;
     protected static ?string $navigationGroup = 'User Management';
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
+    protected static ?string $label = 'Accounts';
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Section::make('Create a User Here')->description('')
+                Section::make('Accounts')->description('Create a new user account.')
                     ->schema([
                         TextInput::make('name')->required()->rules('max:50')->required(),
                         TextInput::make('email')->email()->required()->suffix('@-gmail.com')->unique(ignoreRecord: true),
                         Select::make('role')
                             ->required()
                             ->Relationship('role', 'role'),
-                        TextInput::make('password')->autocomplete(true)->password()->required(),
+                        TextInput::make('password')->autocomplete(true)
+                            ->password()
+                            ->dehydrateStateUsing(fn (string $state): string => Hash::make($state))
+                            ->dehydrated(fn (?string $state): bool => filled($state))
+                            ->required(fn (string $operation): bool => $operation === 'create')
+
                     ])->columnspanfull()->columns([
                         'default' => 2,
                         'md' => 2,
@@ -63,7 +70,6 @@ class UserResource extends Resource
                         return match ($state) {
                             'admin' => 'success',
                             'member' => 'warning',
-                            'user' => 'danger',
                         };
                     }),
                 // ->color(function(string $state):string {
