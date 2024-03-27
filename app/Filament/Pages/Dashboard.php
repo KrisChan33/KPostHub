@@ -14,13 +14,14 @@ class Dashboard extends \Filament\Pages\Dashboard
 {
     use HasFiltersForm;
 
+    protected ?string $heading = 'Welcome to "K-Internship-Daily-Accomplishment-Report-Sys"';
     public function filtersForm(Form $form): Form
     {
         return $form->schema([
-            Section::make('Search')->schema([
-                TextInput::make('search')
-                    ->placeholder('Search...')
-                    ->label('Search'),
+            Section::make('Dates Search')->schema([
+                // TextInput::make('search')
+                //     ->placeholder('Search...')
+                //     ->label('Search'),
                 DatePicker::make('Start Date')
                     ->label('Start Date')
                     ->placeholder('Select a date')
@@ -29,7 +30,7 @@ class Dashboard extends \Filament\Pages\Dashboard
                     ->label('End Date')
                     ->placeholder('Select a date range')
                     ->default(Date::now()->format('Y-m-d'))
-            ])->columns(3)
+            ])->columns(2)
         ]);
     }
 }

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\Category;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
@@ -42,6 +43,33 @@ class DatabaseSeeder extends Seeder
             'name' => 'Delete',
             'description' => 'Delete permission',
         ]);
+
+        Category::create([
+            'name' => 'Coding',
+            'description' => 'Tasks related to code.',
+        ]);
+
+        Category::create([
+            'name' => 'Documentation',
+            'description' => 'Tasks related to creating or updating documents.',
+        ]);
+
+        Category::create([
+            'name' => 'Research',
+            'description' => 'Tasks related to exploring new tech or methods',
+        ]);
+
+        Category::create([
+            'name' => 'Project Management',
+            'description' => 'Tasks related to managing project resources.',
+        ]);
+
+
+        Category::create([
+            'name' => 'Learning & Development',
+            'description' => 'Tasks related to learning new skills or technologies',
+        ]);
+
 
         User::factory(10)->create();
         User::factory()->create([

@@ -9,6 +9,7 @@ use App\Models\Comment;
 use App\Models\User;
 use App\Models\Post;
 use App\Models\Role;
+use DateTime;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 
@@ -60,6 +61,16 @@ class PostandCategory extends BaseWidget
                 ->descriptionIcon('heroicon-o-rectangle-stack')
                 ->color('success')
                 ->chart([7, 2, 10, 3, 15, 4, 17]),
+
+            //'Total Sign In Days stats
+            Stat::make(
+                'Days Since Registration',
+                now()->diffInDays(auth()->user()->created_at)
+            )
+                ->description('Days')
+                ->descriptionIcon('heroicon-o-calendar')
+                ->color('success'),
+
         ];
     }
     public static function canView(): bool

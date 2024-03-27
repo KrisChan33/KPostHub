@@ -20,7 +20,7 @@ return new class extends Migration
             $table->foreignId('category_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->text('content')->nullable();
             $table->json('tags')->nullable();
-            $table->boolean('published');
+            $table->boolean('finished');
             $table->timestamps();
         });
     }

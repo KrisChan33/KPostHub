@@ -39,13 +39,13 @@ class CategoryResource extends Resource
                             ->live(onBlur: true)
                             // ->live(debounce:500)
                             ->afterStateUpdated(function (string $operation, string $state, Forms\Set $set) { //can also user $Forms\Get $get, Category $category this are parameters we can used
-                                $set('slug', Str::slug($state));
+                                $set('description', Str::slug($state));
                             }),
                     ])->columnSpan(1),
-                Section::make('Category Slug')
-                    ->description('Input Category Slug')
+                Section::make('Category Description')
+                    ->description('Input Category Description')
                     ->schema([
-                        TextInput::make('slug')->required()->unique(ignoreRecord: true),
+                        TextInput::make('description')->required()->unique(ignoreRecord: true),
                     ])->columnSpan(1),
             ])->columns(2);
     }
@@ -54,7 +54,7 @@ class CategoryResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')->sortable()->searchable(),
-                TextColumn::make('slug')->sortable()->searchable(),
+                TextColumn::make('description')->sortable()->searchable(),
             ])
             ->filters([
                 //

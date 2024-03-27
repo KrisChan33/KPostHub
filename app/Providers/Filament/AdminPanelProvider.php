@@ -52,7 +52,7 @@ class AdminPanelProvider extends PanelProvider
             ->favicon(asset('images\doodle\icons8-logo-48.png'))
             // ->brandLogo(asset('images\doodle\icons8-logo-48.png'))->brandLogoHeight('50px')
             // ->brandName('k-internship-Daily-Accomplishment-Report-sys')
-            ->brandName('K-DARS')
+            ->brandName('K-IDAR-S')
             // ->brandUrl('https://greenbird.com') => this will redirect to the website
             // ->darkmode(true)
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')

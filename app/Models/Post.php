@@ -18,7 +18,7 @@ class Post extends Model
         'category_id',
         'content',
         'tags',
-        'published',
+        'finished',
         'timestamps',
     ];
     protected $casts = [
@@ -30,8 +30,8 @@ class Post extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function comments()
-    {
-        return $this->morphMany(Comment::class, 'commentable');
-    }
+    // public function comments()
+    // {
+    //     return $this->morphMany(Comment::class, 'commentable');
+    // }
 }

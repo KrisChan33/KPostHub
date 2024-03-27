@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Filament\Resources\PostResource\Pages;
+
 use App\Filament\Resources\PostResource;
 use Filament\Actions;
 use Filament\Resources\Components\Tab;
@@ -20,15 +21,14 @@ class ListPosts extends ListRecords
     }
     public function getTabs(): array
     {
-        return [ 
-            'All'=> Tab::make(),
-            'Publish'=> Tab::make()->modifyQueryUsing(function( EloquentBuilder $query){
-                $query->where('published', true);
+        return [
+            'All' => Tab::make(),
+            'Finished' => Tab::make()->modifyQueryUsing(function (EloquentBuilder $query) {
+                $query->where('finished', true);
             }),
-            'Un Publish'=> Tab::make()->modifyQueryUsing(function( EloquentBuilder $query){
-                $query->where('published', false);
+            'Un Finished' => Tab::make()->modifyQueryUsing(function (EloquentBuilder $query) {
+                $query->where('finished', false);
             }),
         ];
-
     }
 }

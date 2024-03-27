@@ -22,6 +22,7 @@ use Filament\Forms\Components\TagsInput;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Group;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Tables\Columns\ColorColumn;
 use Filament\Tables\Columns\ImageColumn;
@@ -36,15 +37,10 @@ class PostResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-pencil-square';
     protected static ?int $navigationSort = 1;
     protected static ?string $navigationGroup = 'Record Management';
-
-
-
-
+    protected static ?string $label = 'Daily Accomplishments';
     public static function form(Form $form): Form
-
     {
         $userId = auth()->user()->id;
-
         $user = Auth::user();
         return $form
             //         ->schema([
@@ -77,7 +73,11 @@ class PostResource extends Resource
                             ->relationship('category', 'name'), // this is the relationship between the category and the post/ also the name of the category
                         // ->options(Category::all()->pluck('name', 'id')),  => this can call the database and slow down the app, so we use the query builder below
                         ColorPicker::make('color')->required()->rgba(),
-                        MarkdownEditor::make('content')->columnspan('full')->required()->rules('min:8| max:2500'),
+                        RichEditor::make('content')
+                            ->columnspan('full')
+                            ->required()
+                            ->rules('min:8| max:2500'),
+
                     ])->columnSpan(3)->columns(2),
                 Group::make()->schema([
                     Section::make('image')->description('Post Details')
@@ -87,7 +87,7 @@ class PostResource extends Resource
                         ]),
                     Section::make('meta')->schema([
                         TagsInput::make('tags')->required(),
-                        Checkbox::make('published'),
+                        Checkbox::make('finished'),
                     ]),
                 ])->columnSpan([
                     'default' => 1,
@@ -108,13 +108,15 @@ class PostResource extends Resource
             ->columns([
                 ImageColumn::make('thumbnail')->circular(),
                 ColorColumn::make('color'),
-                TextColumn::make('title')->sortable()->searchable(),
+                TextColumn::make('title')
+                    ->sortable()
+                    ->searchable(),
                 TextColumn::make('slug'),
                 TextColumn::make('category.name'),
                 TextColumn::make('tags'),
-                CheckboxColumn::make('published'),
+                CheckboxColumn::make('finished'),
                 TextColumn::make('created_at')
-                    ->label('Published on')
+                    ->label('Finished on')
                     ->date('d M Y  H:i:s')
                     ->sortable()
                     ->searchable(),
@@ -125,12 +127,12 @@ class PostResource extends Resource
             ->filters([
                 Filter::make('Public Post')->query(
                     function (Builder $query): Builder {
-                        return $query->where('published', true);
+                        return $query->where('finished', true);
                     }
                 ),
                 Filter::make('Public Post')->query(
                     function (Builder $query): Builder {
-                        return $query->where('published', false);
+                        return $query->where('finished', false);
                     }
                 ),
                 // TernaryFilter::make('published'), = for yes or no /  bool
