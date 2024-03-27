@@ -13,10 +13,11 @@ use Illuminate\Support\Facades\Date;
 class Dashboard extends \Filament\Pages\Dashboard
 {
     use HasFiltersForm;
+
     public function filtersForm(Form $form): Form
     {
         return $form->schema([
-                Section::make('Search')->schema([
+            Section::make('Search')->schema([
                 TextInput::make('search')
                     ->placeholder('Search...')
                     ->label('Search'),
@@ -32,4 +33,3 @@ class Dashboard extends \Filament\Pages\Dashboard
         ]);
     }
 }
-?>

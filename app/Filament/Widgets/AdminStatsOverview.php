@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Comment;
 use App\Models\User;
 use App\Models\Post;
+use App\Models\Role;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
@@ -16,6 +17,8 @@ class AdminStatsOverview extends BaseWidget
     protected static bool $isLazy = false;
     protected static ?string $pollingInterval = '10s';
     protected static ?int $sort = 1;
+    protected int | string | array $columnSpan = 'full';
+
     protected function getStats(): array
     {
         //using filters to not show the data when the date is not selected or not in the range
@@ -26,11 +29,11 @@ class AdminStatsOverview extends BaseWidget
                 'Total Users',
                 User::when(
                     $startDate,
-                    fn ($query) => $query->whereDate('created_at', '>', $startDate)
+                    fn ($query) => $query->whereDate('created_at', '>=', $startDate)
                 )
                     ->when(
                         $endDate,
-                        fn ($query) => $query->whereDate('created_at', '<', $endDate)
+                        fn ($query) => $query->whereDate('created_at', '<=', $endDate)
                     )
                     ->count()
             )
@@ -45,25 +48,24 @@ class AdminStatsOverview extends BaseWidget
                 ->chart([7, 2, 10, 3, 15, 4, 17])
                 ->color('primary'),
 
-            Stat::make('Total Comments', Comment::query()->count())
-                ->descriptionIcon('heroicon-o-chat-bubble-oval-left-ellipsis')
-                ->chart([7, 2, 10, 3, 15, 4, 17])
-                ->description('Comments')
-                ->color('warning'),
-
+            // Stat::make('Total Comments', Comment::query()->count())
+            //     ->descriptionIcon('heroicon-o-chat-bubble-oval-left-ellipsis')
+            //     ->chart([7, 2, 10, 3, 15, 4, 17])
+            //     ->description('Comments')
+            //     ->color('warning'),
             Stat::make('Total Category', Category::query()->count())
                 ->descriptionIcon('heroicon-o-clipboard-document')
                 ->chart([7, 2, 10, 3, 15, 4, 17])
                 ->description('Categories')
                 ->color('danger'),
 
-            Stat::make('Total Admins', User::query()->where('role', 'admin')->count())
+            Stat::make('Total Admins', Role::query()->where('role', 'admin')->count())
                 ->descriptionIcon('heroicon-o-users')
                 ->chart([7, 2, 10, 3, 15, 4, 17])
                 ->description('Admins')
                 ->color('success'),
 
-            Stat::make('Total Members', User::query()->where('role', 'member')->count())
+            Stat::make('Total Members', Role::query()->where('role', 'member')->count())
                 ->descriptionIcon('heroicon-o-users')
                 ->chart([7, 2, 10, 3, 15, 4, 17])
                 ->description('Members')
@@ -72,6 +74,10 @@ class AdminStatsOverview extends BaseWidget
     }
     public static function canView(): bool
     {
-        return auth()->user()->role === 'admin' || auth()->user()->role === 'member';
+        return auth()->user()->role->role === 'admin';
+    }
+    public static function canAccess(): bool
+    {
+        return auth()->user()->role->role === 'admin';
     }
 }

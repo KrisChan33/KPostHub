@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Filament\Resources;
+
 use App\Filament\Resources\CategoryResource\Pages;
 use App\Filament\Resources\CategoryResource\RelationManagers;
 use App\Models\Category;
@@ -18,34 +19,34 @@ use App\Filament\Forms\Components\Group;
 use App\Filament\Resources\CategoryResource\RelationManagers\PostRelationManager;
 use App\Filament\Resources\CategoryResource\RelationManagers\PostsRelationManager;
 use Illuminate\Support\Str;
+
 class CategoryResource extends Resource
 {
     protected static ?string $model = Category::class;
     protected static ?int $navigationSort = 2;
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $modelLabel = 'Category';
-    protected static ?string $navigationParentItem = 'Posts';
-    protected static ?string $navigationGroup = 'Blog';
-    
+    protected static ?string $navigationGroup = 'Record Management';
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-            Section::make('Input Name')
-            ->description('Input Category Name')
-            ->schema([
-                TextInput::make('name')->required()->rule('max:50')
-                ->live(onBlur: true)
-                // ->live(debounce:500)
-                ->afterStateUpdated(function(string $operation, string $state, Forms\Set $set){ //can also user $Forms\Get $get, Category $category this are parameters we can used
-                $set('slug', Str::slug($state));
-            }),
-            ])->columnSpan(1),
-            Section::make('Input Slug')
-            ->description('Input Category Slug')
-            ->schema([
-                TextInput::make('slug')->required()->unique(ignoreRecord:true),
-            ])->columnSpan(1),
+                Section::make('Category Name')
+                    ->description('Input Category Name')
+                    ->schema([
+                        TextInput::make('name')->required()->rule('max:50')
+                            ->live(onBlur: true)
+                            // ->live(debounce:500)
+                            ->afterStateUpdated(function (string $operation, string $state, Forms\Set $set) { //can also user $Forms\Get $get, Category $category this are parameters we can used
+                                $set('slug', Str::slug($state));
+                            }),
+                    ])->columnSpan(1),
+                Section::make('Category Slug')
+                    ->description('Input Category Slug')
+                    ->schema([
+                        TextInput::make('slug')->required()->unique(ignoreRecord: true),
+                    ])->columnSpan(1),
             ])->columns(2);
     }
     public static function table(Table $table): Table

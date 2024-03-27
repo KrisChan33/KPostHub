@@ -37,10 +37,10 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->registration()
-            ->emailVerification()
-            ->passwordReset()
+            // ->emailVerification()
+            // ->passwordReset()
             //->profile(EditProfile::class)
-            ->profile(isSimple: false)
+            ->profile(isSimple: true)
             ->colors([
                 'danger' => Color::Rose,
                 'gray' => Color::Gray,
@@ -63,7 +63,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
+                // Widgets\AccountWidget::class,
                 // Widgets\FilamentInfoWidget::class,
                 AdminStatsOverview::class,
                 CategoryChart::class,
@@ -91,9 +91,9 @@ class AdminPanelProvider extends PanelProvider
         return $panel
             // ...
             // ->tenantProfile(RegistryTeam::class)
-            ->tenant(Team::class, ownershipRelationship: 'team')
-            ->defaultThemeMode(ThemeMode::Light)
-            ->tenantRegistration(RegisterTeam::class)
-            ->tenantProfile(EditTeamProfile::class);
+            // ->tenant(Team::class, ownershipRelationship: 'team')
+            ->defaultThemeMode(ThemeMode::Light);
+        // ->tenantRegistration(RegisterTeam::class)
+        // ->tenantProfile(EditTeamProfile::class);
     }
 }
