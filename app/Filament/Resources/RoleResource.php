@@ -86,4 +86,15 @@ class RoleResource extends Resource
     {
         return Auth::user()->role->role === 'admin';
     }
+
+    //Badges
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+    public static function getNavigationBadgeColor(): string|array|null
+
+    {
+        return static::getModel()::count() > 0 ? 'success' : 'danger';
+    }
 }

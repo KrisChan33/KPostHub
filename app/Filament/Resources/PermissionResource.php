@@ -46,7 +46,6 @@ class PermissionResource extends Resource
 
             ]);
     }
-
     public static function table(Table $table): Table
     {
         return $table
@@ -71,7 +70,6 @@ class PermissionResource extends Resource
                 ]),
             ]);
     }
-
     public static function getRelations(): array
     {
         return [
@@ -86,5 +84,16 @@ class PermissionResource extends Resource
             'create' => Pages\CreatePermission::route('/create'),
             'edit' => Pages\EditPermission::route('/{record}/edit'),
         ];
+    }
+
+    //badges
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+    public static function getNavigationBadgeColor(): string|array|null
+
+    {
+        return static::getModel()::count() > 0 ? 'success' : 'danger';
     }
 }

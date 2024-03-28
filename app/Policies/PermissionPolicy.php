@@ -18,11 +18,10 @@ class PermissionPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, User $model): bool
+    public function view(User $user): bool
     {
         return $user->admin();
     }
-
     /**
      * Determine whether the user can create models.
      */
@@ -34,11 +33,11 @@ class PermissionPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, User $model): bool
+    public function update(User $user): bool
     {
         return $user->admin();
     }
-    public function delete(User $user, User $model): bool
+    public function delete(User $user): bool
     {
         return $user->admin();
     }
@@ -64,6 +63,12 @@ class PermissionPolicy
     {
         return $user->admin();
     }
+
+    public function forceDelete(User $user): bool
+    {
+        return $user->admin();
+    }
+
     public function restore(User $user): bool
     {
         return $user->admin();

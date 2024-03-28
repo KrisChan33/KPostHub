@@ -12,6 +12,7 @@ class Role extends Model
 
     protected $fillable = [
         'id',
+        'permission_id',
         'role',
         'description',
     ];
@@ -19,5 +20,9 @@ class Role extends Model
     public function users(): HasMany
     {
         return $this->hasMany(User::class);
+    }
+    public function permissions(): HasMany
+    {
+        return $this->hasMany(Permission::class);
     }
 }
